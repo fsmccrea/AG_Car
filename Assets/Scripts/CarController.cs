@@ -5,12 +5,16 @@ using UnityEditor;
 
 public class CarController : MonoBehaviour
 {
-    public int bounceForce = 10;
-    public int bounceTorqueForce = 10;
+    public int hopForce = 10;
+    public int hopTorqueForce = 10;
+    public float suspensionForce = 3;
 
     Rigidbody rb;
     Transform chassis;
-    Vector3[] wheelPos = new Vector3[4];
+
+    Vector3[] wheelLocalPos = new Vector3[4];
+    Vector3[] wheelWorldPos = new Vector3[4];
+    float[] wheelCompress = new float[4];
 
     int layerMask;
 
@@ -28,47 +32,47 @@ public class CarController : MonoBehaviour
 
         //Array of wheel raycast origin points based on scale of car collider
         //Front left wheel:
-        wheelPos[0] = new Vector3 (-halfCarWidth, -halfCarHeight + .1f, halfCarLength);
+        wheelLocalPos[0] = new Vector3 (-halfCarWidth, -halfCarHeight + .1f, halfCarLength);
         //Front right:
-        wheelPos[1] = new Vector3 (halfCarWidth, -halfCarHeight + .1f, halfCarLength);
+        wheelLocalPos[1] = new Vector3 (halfCarWidth, -halfCarHeight + .1f, halfCarLength);
         //Back left:
-        wheelPos[2] = new Vector3 (-halfCarWidth, -halfCarHeight + .1f, -halfCarLength);
+        wheelLocalPos[2] = new Vector3 (-halfCarWidth, -halfCarHeight + .1f, -halfCarLength);
         //Back right:
-        wheelPos[3] = new Vector3 (halfCarWidth, -halfCarHeight + .1f, -halfCarLength);
+        wheelLocalPos[3] = new Vector3 (halfCarWidth, -halfCarHeight + .1f, -halfCarLength);
     }
 
     void Update()
     {
         if (Input.GetButtonDown ("Jump")) {
-            Bounce();
+            Hop();
         }
     }
 
     void FixedUpdate()
     {
-        foreach (Vector3 thePos in wheelPos)
+        for (int i = 0; i < 4; i++)
         {
-            //gotta switch this loop to a for loop so i could use it in other spots too)
-
-            //Debug.DrawRay((transform.position - transform.up * .5f) + (transform.right * thePos.x) + (transform.forward * thePos.y), -transform.up * .5f, Color.red);
-            /*Debug.DrawRay(
-                transform.position +
-                (transform.forward * thePos.z) +
-                (transform.right * thePos.x) +
-                (transform.up * thePos.y)
-            , -transform.up * .5f, Color.red);
-            */
+            //place start point of each ray relative to location and orientation of the car
             Vector3 startPos = transform.position +
-                (transform.forward * thePos.z) +
-                (transform.right * thePos.x) +
-                (transform.up * thePos.y);
+                (transform.forward * wheelLocalPos[i].z) +
+                (transform.right * wheelLocalPos[i].x) +
+                (transform.up * wheelLocalPos[i].y);
+
+            //save start point in another array for the gizmos
+            wheelWorldPos[i] = startPos;
 
             RaycastHit hit;
             if (Physics.Raycast(startPos, -transform.up, out hit, 1.1f, layerMask, QueryTriggerInteraction.Ignore)) {
                 Debug.DrawLine(startPos, hit.point, Color.green);
-                print("hit!");
+                //calculate wheel compression percent based on clamped distance between ray and hit point (adjusted for the .1f overlap with the collider)
+                //may want to change that clamp01 to a lerp later so I can have variable suspension height
+                wheelCompress[i] = 1f - Mathf.Clamp01(Vector3.Distance(startPos, hit.point) - .1f);
+
+                Suspend(startPos, wheelCompress[i]);
+
             } else {
                 Debug.DrawRay(startPos, -transform.up, Color.red);
+                wheelCompress[i] = 0f;
             }
         }
     }
@@ -76,15 +80,19 @@ public class CarController : MonoBehaviour
     void OnDrawGizmos()
     {
         Handles.Label(transform.position, "Test");
-        foreach (Vector3 thePos in wheelPos)
+        for (int i = 0; i < 4; i++)
         {
-            Handles.Label(thePos, "gotem");
+            Handles.Label(wheelWorldPos[i], wheelCompress[i].ToString());
         }
     }
     
-    void Bounce() {
+    void Hop() {
         Vector3 tq = Random.onUnitSphere;
-        rb.AddForce(Vector3.up * bounceForce, ForceMode.Impulse);
-        rb.AddTorque(tq * bounceTorqueForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * hopForce, ForceMode.Impulse);
+        rb.AddTorque(tq * hopTorqueForce, ForceMode.Impulse);
+    }
+
+    void Suspend(Vector3 forcePos, float compressPercent) {
+        rb.AddForceAtPosition(Vector3.up * suspensionForce * compressPercent, forcePos, ForceMode.Acceleration);
     }
 }
