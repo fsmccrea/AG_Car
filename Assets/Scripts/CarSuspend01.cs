@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class CarController : MonoBehaviour
+public class CarSuspend01 : MonoBehaviour
 {
     public int hopForce = 10;
     public int hopTorqueForce = 10;
@@ -79,7 +79,6 @@ public class CarController : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Handles.Label(transform.position, "Test");
         for (int i = 0; i < 4; i++)
         {
             Handles.Label(wheelWorldPos[i], wheelCompress[i].ToString());
