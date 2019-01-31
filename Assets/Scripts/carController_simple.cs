@@ -19,6 +19,7 @@ public class carController_simple : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        axleInfos[1].leftWheel.ConfigureVehicleSubsteps(5f,12,15);
     }
 
     void Update()
