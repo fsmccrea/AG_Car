@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class carController_simple : MonoBehaviour
+public class carController_01 : MonoBehaviour
 {
     public List<AxleInfo> axleInfos; // the info about the axles
     public float maxMotorTorque; // max torque to wheel

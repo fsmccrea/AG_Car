@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class CarSuspend01 : MonoBehaviour
+public class CarSuspend_01 : MonoBehaviour
 {
     public int hopForce = 10;
     public int hopTorqueForce = 10;
