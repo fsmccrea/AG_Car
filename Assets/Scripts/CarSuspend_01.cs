@@ -77,13 +77,13 @@ public class CarSuspend_01 : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+/*    void OnDrawGizmos()
     {
         for (int i = 0; i < 4; i++)
         {
             Handles.Label(wheelWorldPos[i], wheelCompress[i].ToString());
         }
-    }
+    } */
     
     void Hop() {
         Vector3 tq = Random.onUnitSphere;

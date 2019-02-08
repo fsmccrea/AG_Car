@@ -186,8 +186,8 @@ WheelCollider:
   m_SuspensionSpring:
     spring: 35000
     damper: 2000
-    targetPosition: 0.6
-  m_SuspensionDistance: 0.5
+    targetPosition: 0
+  m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -233,8 +233,8 @@ WheelCollider:
   m_SuspensionSpring:
     spring: 35000
     damper: 2000
-    targetPosition: 0.6
-  m_SuspensionDistance: 0.5
+    targetPosition: 0
+  m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -296,36 +296,6 @@ Transform:
   m_Father: {fileID: 415768786}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &328310899
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 328310900}
-  m_Layer: 0
-  m_Name: engine_mass
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &328310900
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 328310899}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 429973579}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &348686857
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,8 +339,8 @@ WheelCollider:
   m_SuspensionSpring:
     spring: 35000
     damper: 2000
-    targetPosition: 0.6
-  m_SuspensionDistance: 0.5
+    targetPosition: 0
+  m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0
   m_Mass: 20
   m_WheelDampingRate: 0.25
@@ -583,7 +553,7 @@ Transform:
   - {fileID: 1548563409}
   - {fileID: 2112938482}
   m_Father: {fileID: 429973579}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &418034753
 GameObject:
@@ -688,7 +658,7 @@ GameObject:
   - component: {fileID: 429973578}
   - component: {fileID: 429973577}
   m_Layer: 0
-  m_Name: car_root_02
+  m_Name: car3_root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -707,20 +677,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axleInfos:
-  - leftWheel: {fileID: 1779037913}
-    rightWheel: {fileID: 348686859}
+  - leftWheelW: {fileID: 1779037913}
+    rightWheelW: {fileID: 348686859}
+    leftWheelT: {fileID: 282772608}
+    rightWheelT: {fileID: 1866670319}
     motor: 0
     steering: 1
-  - leftWheel: {fileID: 178611574}
-    rightWheel: {fileID: 272429114}
+  - leftWheelW: {fileID: 178611574}
+    rightWheelW: {fileID: 272429114}
+    leftWheelT: {fileID: 2112938482}
+    rightWheelT: {fileID: 1548563409}
     motor: 1
     steering: 0
   maxMotorTorque: 1000
-  maxSteeringAngle: 10
-  antiRollFront: 8000
-  antiRollBack: 8000
+  maxSteeringAngle: 35
+  antiRollFront: 16000
+  antiRollBack: 16000
   hopForce: 10000
-  hopTorqueForce: 2000
+  hopTorqueForce: 3000
 --- !u!54 &429973578
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -734,7 +708,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!4 &429973579
@@ -750,7 +724,6 @@ Transform:
   m_Children:
   - {fileID: 1285214020}
   - {fileID: 1900546576}
-  - {fileID: 328310900}
   - {fileID: 415768786}
   - {fileID: 1236007003}
   m_Father: {fileID: 0}
@@ -1198,12 +1171,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axleInfos:
-  - leftWheel: {fileID: 1817490682}
-    rightWheel: {fileID: 1322928207}
+  - leftWheelW: {fileID: 0}
+    rightWheelW: {fileID: 0}
+    leftWheelT: {fileID: 0}
+    rightWheelT: {fileID: 0}
     motor: 0
     steering: 1
-  - leftWheel: {fileID: 1850987398}
-    rightWheel: {fileID: 776464807}
+  - leftWheelW: {fileID: 0}
+    rightWheelW: {fileID: 0}
+    leftWheelT: {fileID: 0}
+    rightWheelT: {fileID: 0}
     motor: 1
     steering: 0
   maxMotorTorque: 50
@@ -1337,8 +1314,9 @@ MonoBehaviour:
   camRig: {fileID: 2131526647}
   camFocus: {fileID: 2023163347}
   theCamera: {fileID: 1744064748}
-  rigOffset: -10
-  camHeight: 4
+  posSmoothTime: 8
+  rotSmoothTime: 3
+  camOffset: {x: 0, y: 4, z: -10}
 --- !u!4 &842633615
 Transform:
   m_ObjectHideFlags: 0
@@ -2248,7 +2226,7 @@ Transform:
   - {fileID: 178611573}
   - {fileID: 272429115}
   m_Father: {fileID: 429973579}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1244274426
 GameObject:
@@ -2970,8 +2948,8 @@ WheelCollider:
   m_SuspensionSpring:
     spring: 35000
     damper: 2000
-    targetPosition: 0.6
-  m_SuspensionDistance: 0.5
+    targetPosition: 0
+  m_SuspensionDistance: 0.2
   m_ForceAppPointDistance: 0
   m_Mass: 20
   m_WheelDampingRate: 0.25

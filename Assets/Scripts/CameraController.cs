@@ -9,22 +9,23 @@ public class CameraController : MonoBehaviour
     public Transform camFocus;
     public Camera theCamera;
 
-    public float rigOffset = -10f;
-    public float camHeight = 4f;
+    public float posSmoothTime = 10f;
+    public float rotSmoothTime = 10f;
+
+    public Vector3 camOffset = new Vector3 (0, 4f, -10f);
 
     Transform carFocus;
 
     void Start()
     {
         carFocus = theCar.GetChild(0);
-        RigOffset();
-        CamOffset();
+    //    Offset();
     }
 
-    void FixedUpdate()
+    void LateUpdate()
     {
         RootFollow();
-        Focus();
+        Offset();
         CamFocus();
     }
 
@@ -32,31 +33,35 @@ public class CameraController : MonoBehaviour
     {
         //follow car's position
         Vector3 _carPos = new Vector3 (theCar.position.x, 0, theCar.position.z);
-        transform.position = _carPos;
+        
+        //quaternion facing car's forward direction (exclusively)
+        Quaternion _forward = Quaternion.Euler(Vector3.Scale(theCar.rotation.eulerAngles, Vector3.up));
+
+        transform.position = Vector3.Lerp (transform.position, _carPos, Time.deltaTime * posSmoothTime);//Vector3.Lerp (transform.position, _carPos, Time.deltaTime);
+
+        transform.rotation = Quaternion.Lerp (transform.rotation, _forward, Time.deltaTime * rotSmoothTime);
     }
 
-    void RigOffset()
+    void Offset()
     {
-        //offset from root by a specified amount
-        Vector3 _rigPos = new Vector3 (0, 0, rigOffset);
-        transform.localPosition = _rigPos;
-    }
+        //offset from root by a camOffset amount
+    //    Vector3 _rigPos = new Vector3 (0, camHeight, rigOffset);
+    //    transform.localPosition = _rigPos;
+        Vector3 _rigPos = transform.position +
+            (transform.forward * camOffset.z) +
+            (transform.right * camOffset.x) +
+            (transform.up * camOffset.y);
 
-    void Focus()
-    {
-        //follow CAR's focal point
-        camFocus.position = carFocus.position;
-    }
-
-    void CamOffset()
-    {
         //offset from rig
-        Vector3 _camPos = new Vector3 (0, camHeight, 0);
-        transform.position = _camPos;
+    //    Vector3 _camPos = new Vector3 (0, camHeight, 0);
+    //    transform.position = _camPos;
     }
 
     void CamFocus()
     {
+        //follow CAR's focal point
+        camFocus.position = carFocus.position;
+
         //look at focal point
         Vector3 _lookDirection = camFocus.position - theCamera.transform.position;
         Quaternion _rot = Quaternion.LookRotation(_lookDirection, Vector3.up);
