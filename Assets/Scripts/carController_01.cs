@@ -7,6 +7,7 @@ public class carController_01 : MonoBehaviour
     public List<AxleInfo> axleInfos; // the info about the axles
     public float maxMotorTorque; // max torque to wheel
     public float maxSteeringAngle; // max turn angle to wheel
+    public float maxBrakeTorque;
 
     public float antiRollFront = 5000f;
     public float antiRollBack = 5000f; // max force that the anti-roll bar can transfer among the springs (stiffness of anti-roll bar)
@@ -32,8 +33,11 @@ public class carController_01 : MonoBehaviour
 
     void FixedUpdate()
     {
-        float motor = maxMotorTorque * Input.GetAxis ("Vertical");
+        float motor = maxMotorTorque * Mathf.Clamp01(Input.GetAxisRaw("RightTrigger")/2 + .5f);
         float steering = maxSteeringAngle * Input.GetAxis ("Horizontal");
+        float brake = maxBrakeTorque * Mathf.Clamp01(Input.GetAxisRaw("LeftTrigger")/2 + .5f);
+
+        bool reverse = Input.GetButton("Triangle");
 
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
@@ -42,10 +46,14 @@ public class carController_01 : MonoBehaviour
                 StabilizerBars(antiRollFront, axleInfo);
             }
             if (axleInfo.motor) {
-                axleInfo.leftWheelW.motorTorque = motor;
-                axleInfo.rightWheelW.motorTorque = motor;
+                axleInfo.leftWheelW.motorTorque = reverse ? -motor : motor;
+                axleInfo.rightWheelW.motorTorque = reverse ? -motor : motor;
                 StabilizerBars(antiRollBack, axleInfo);
             }
+
+            axleInfo.leftWheelW.brakeTorque = brake;
+            axleInfo.rightWheelW.brakeTorque = brake;
+
             UpdateWheelPose(axleInfo.leftWheelT.transform, axleInfo.leftWheelW);
             UpdateWheelPose(axleInfo.rightWheelT.transform, axleInfo.rightWheelW);
         }
